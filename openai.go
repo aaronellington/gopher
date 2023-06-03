@@ -42,8 +42,6 @@ func (s *Service) AIPrompt(ctx context.Context, prompt string, args ...any) (str
 		return "", err
 	}
 
-	fmt.Printf("%+v", response)
-
 	return response.Choices[0].Message.Content, nil
 }
 
