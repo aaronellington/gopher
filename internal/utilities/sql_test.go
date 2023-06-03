@@ -16,6 +16,7 @@ func TestSave(t *testing.T) {
 
 	expectedQuery := "INSERT INTO `tableName` (`id`) VALUES (:id) ON DUPLICATE KEY UPDATE `id` = :id;"
 	actualQuery := utilities.GenerateSaveQuery("tableName", Entity{}, true)
+
 	if err := forgetest.Assert(expectedQuery, actualQuery); err != nil {
 		t.Fatal(err)
 	}
@@ -31,6 +32,7 @@ func TestDelete(t *testing.T) {
 
 	expectedQuery := "DELETE FROM `tableName` WHERE `email` = :email AND `phoneNumber` = :phoneNumber"
 	actualQuery := utilities.GenerateDeleteByPrimaryKeyQuery("tableName", Entity{})
+
 	if err := forgetest.Assert(expectedQuery, actualQuery); err != nil {
 		t.Fatal(err)
 	}
@@ -47,6 +49,7 @@ func TestSelect(t *testing.T) {
 
 	expectedQuery := "SELECT `email`, `phoneNumber`, `user`.`name` as `user.name`, `active` FROM `tableName` LEFT JOIN `user`"
 	actualQuery := utilities.GenerateSelect("tableName", "LEFT JOIN `user`", Entity{})
+
 	if err := forgetest.Assert(expectedQuery, actualQuery); err != nil {
 		t.Fatal(err)
 	}

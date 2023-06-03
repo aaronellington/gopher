@@ -10,6 +10,7 @@ import (
 func NewServiceWithConfig() *Service {
 	config := Config{}
 	environment := forge.NewEnvironment()
+
 	if err := environment.Decode(&config); err != nil {
 		panic(err)
 	}

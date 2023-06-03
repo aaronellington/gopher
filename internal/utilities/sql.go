@@ -92,6 +92,7 @@ func GenerateSelect(tableName string, joins string, entity any) string {
 
 		if len(parts) == 2 {
 			selects = append(selects, fmt.Sprintf("`%s`.`%s` as `%s`", parts[0], parts[1], columnName))
+
 			continue
 		}
 

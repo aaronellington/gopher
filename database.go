@@ -48,7 +48,7 @@ type DatabaseAbstractionLayer struct {
 	db *sqlx.DB
 }
 
-func (dbal *DatabaseAbstractionLayer) SelectAll(ctx context.Context, target any, query string, bind any) error {
+func (dbal *DatabaseAbstractionLayer) SelectAll(_ context.Context, target any, query string, bind any) error {
 	if bind == nil {
 		bind = map[string]any{}
 	}
@@ -58,14 +58,10 @@ func (dbal *DatabaseAbstractionLayer) SelectAll(ctx context.Context, target any,
 		return err
 	}
 
-	if err := statement.Select(target, bind); err != nil {
-		return err
-	}
-
-	return nil
+	return statement.Select(target, bind)
 }
 
-func (dbal *DatabaseAbstractionLayer) SelectSingle(ctx context.Context, target any, query string, bind any) error {
+func (dbal *DatabaseAbstractionLayer) SelectSingle(_ context.Context, target any, query string, bind any) error {
 	if bind == nil {
 		bind = map[string]any{}
 	}
@@ -75,11 +71,7 @@ func (dbal *DatabaseAbstractionLayer) SelectSingle(ctx context.Context, target a
 		return err
 	}
 
-	if err := statement.Get(target, bind); err != nil {
-		return err
-	}
-
-	return nil
+	return statement.Get(target, bind)
 }
 
 func (dbal *DatabaseAbstractionLayer) TruncateTables(t *testing.T, tables []string) {

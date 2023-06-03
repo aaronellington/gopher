@@ -1,0 +1,8 @@
+# Temporary Files
+/var/
+
+# Project Config and Secrets
+/.env*local
+
+# Go Temporary Files
+__debug_bin

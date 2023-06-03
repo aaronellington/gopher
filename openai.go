@@ -54,12 +54,14 @@ func (s *Service) aiTruncateTokens(ctx context.Context, messages []openai.ChatCo
 	tkm, err := tiktoken.EncodingForModel(openAiModel)
 	if err != nil {
 		err = fmt.Errorf("EncodingForModel: %v", err)
+
 		return err
 	}
 
 	// Handle truncation of the tokens
 	lastMessageIndex := len(messages) - 1
 	tokensOver := tokenCount - maxTokens
+
 	if tokensOver > 0 {
 		lastMessageTokens := tkm.Encode(messages[lastMessageIndex].Content, nil, nil)
 		truncatedTokens := lastMessageTokens[0 : len(lastMessageTokens)-tokensOver-5]
@@ -69,39 +71,40 @@ func (s *Service) aiTruncateTokens(ctx context.Context, messages []openai.ChatCo
 	return nil
 }
 
-func (s *Service) aiCountTokens(ctx context.Context, messages []openai.ChatCompletionMessage) (int, error) {
+func (s *Service) aiCountTokens(_ context.Context, messages []openai.ChatCompletionMessage) (int, error) {
 	tkm, err := tiktoken.EncodingForModel(openAiModel)
 	if err != nil {
 		err = fmt.Errorf("EncodingForModel: %v", err)
+
 		return 0, err
 	}
 
-	var num_tokens int
+	var numTokens int
 
-	var tokens_per_message int
-	var tokens_per_name int
+	var tokensPerMessage int
+
+	var tokensPerName int
+
 	if openAiModel == "gpt-3.5-turbo-0301" || openAiModel == "gpt-3.5-turbo" {
-		tokens_per_message = 4
-		tokens_per_name = -1
-	} else if openAiModel == "gpt-4-0314" || openAiModel == "gpt-4" {
-		tokens_per_message = 3
-		tokens_per_name = 1
+		tokensPerMessage = 4
+		tokensPerName = -1
 	} else {
-		tokens_per_message = 3
-		tokens_per_name = 1
+		tokensPerMessage = 3
+		tokensPerName = 1
 	}
 
 	for _, message := range messages {
-		num_tokens += tokens_per_message
-		num_tokens += len(tkm.Encode(message.Content, nil, nil))
-		num_tokens += len(tkm.Encode(message.Role, nil, nil))
-		num_tokens += len(tkm.Encode(message.Name, nil, nil))
+		numTokens += tokensPerMessage
+		numTokens += len(tkm.Encode(message.Content, nil, nil))
+		numTokens += len(tkm.Encode(message.Role, nil, nil))
+		numTokens += len(tkm.Encode(message.Name, nil, nil))
+
 		if message.Name != "" {
-			num_tokens += tokens_per_name
+			numTokens += tokensPerName
 		}
 	}
 
-	num_tokens += 3
+	numTokens += 3
 
-	return num_tokens, nil
+	return numTokens, nil
 }
