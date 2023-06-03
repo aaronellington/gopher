@@ -1,10 +1,7 @@
 package gopher
 
 import (
-	"fmt"
-
 	"github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
 	"github.com/kyberbits/forge/forge"
 	"github.com/nukosuke/go-zendesk/zendesk"
 	"github.com/sashabaranov/go-openai"
@@ -30,21 +27,18 @@ func NewService(config Config) *Service {
 	return &Service{
 		zd: zdClient,
 		ai: openai.NewClient(config.OpenAIKey),
-		db: sqlx.MustOpen("mysql",
-			fmt.Sprintf(
-				"%s:%s@tcp(%s:%d)/%s?parseTime=true&allowCleartextPasswords=1",
-				config.DatabaseUser,
-				config.DatabasePass,
-				config.DatabaseHost,
-				config.DatabasePort,
-				config.DatabaseName,
-			),
-		),
+		dbal: NewDBAL(DBALConfig{
+			User: config.DatabaseUser,
+			Pass: config.DatabasePass,
+			Host: config.DatabaseHost,
+			Port: config.DatabasePort,
+			Name: config.DatabaseName,
+		}),
 	}
 }
 
 type Service struct {
-	db *sqlx.DB
-	zd *zendesk.Client
-	ai *openai.Client
+	dbal *DatabaseAbstractionLayer
+	zd   *zendesk.Client
+	ai   *openai.Client
 }
