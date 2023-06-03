@@ -1,6 +1,7 @@
 package gopher
 
 import (
+	"github.com/aaronellington/gopher/dbal"
 	"github.com/go-sql-driver/mysql"
 	"github.com/kyberbits/forge/forge"
 	"github.com/nukosuke/go-zendesk/zendesk"
@@ -28,7 +29,7 @@ func NewService(config Config) *Service {
 	return &Service{
 		zd: zdClient,
 		ai: openai.NewClient(config.OpenAIKey),
-		dbal: NewDBAL(DBALConfig{
+		dbal: dbal.NewService(dbal.Config{
 			User: config.DatabaseUser,
 			Pass: config.DatabasePass,
 			Host: config.DatabaseHost,
@@ -39,7 +40,7 @@ func NewService(config Config) *Service {
 }
 
 type Service struct {
-	dbal *DatabaseAbstractionLayer
+	dbal *dbal.Service
 	zd   *zendesk.Client
 	ai   *openai.Client
 }

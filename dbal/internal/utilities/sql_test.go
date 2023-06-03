@@ -3,7 +3,7 @@ package utilities_test
 import (
 	"testing"
 
-	"github.com/aaronellington/gopher/internal/utilities"
+	"github.com/aaronellington/gopher/dbal/internal/utilities"
 	"github.com/kyberbits/forge/forgetest"
 )
 
